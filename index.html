@@ -3,25 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>精品石雕展示系统 - 全品类石雕作品鉴赏</title>
+  <title>庭院石雕 - 中式石雕精品展示系统 | 含详情+尺寸+材质+工艺</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <script>
-    // tailwind配置 定义石雕主题配色和全局样式
+    // Tailwind 配置 - 新中式石雕主题配色
     tailwind.config = {
       theme: {
         extend: {
           colors: {
             stone: {
-              dark: '#2C3639', // 青石深灰
-              mid: '#5C6E70',  // 青石中灰
-              light: '#DCD7C9', // 汉白玉米白
-              warm: '#A27B5C',  // 晚霞红暖棕
-              wood: '#7D5A4F'   // 原木色
+              dark: '#2D3748',
+              mid: '#4A5568',
+              light: '#E2E8F0',
+              accent: '#9C7C4A'
             },
+            neutral: {
+              100: '#F7F5F2',
+              200: '#E9E4DD',
+            }
           },
           fontFamily: {
-            stone: ['system-ui', 'sans-serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
           },
         },
       }
@@ -29,303 +32,417 @@
   </script>
   <style type="text/tailwindcss">
     @layer utilities {
-      .card-hover {
-        @apply transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-stone-dark/30;
+      .stone-card {
+        @apply bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer;
       }
-      .btn-active {
-        @apply bg-stone-warm text-white;
+      .category-btn {
+        @apply px-4 py-2 rounded-full transition-all duration-300 hover:bg-stone-accent/10 text-sm md:text-base;
       }
-      .img-scale {
-        @apply transition-transform duration-500;
+      .category-btn-active {
+        @apply bg-stone-accent text-white font-medium;
+      }
+      .modal-btn {
+        @apply bg-white/90 hover:bg-stone-accent text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md transition-all duration-300 hover:scale-110 z-[1000];
+      }
+      .stone-info-item {
+        @apply flex items-center gap-2 py-1.5 border-b border-white/10 text-white/95;
       }
     }
-    /* 全局样式重置 */
-    body {
-      background-color: #F5F2EB;
-      scroll-behavior: smooth;
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    .animate-fadeIn {
+      animation: fadeIn 0.5s ease forwards;
+    }
+    /* 图片淡入淡出过渡 */
+    .detail-img {
+      transition: opacity 0.4s ease;
     }
   </style>
 </head>
-<body class="font-stone text-stone-dark">
+<body class="bg-neutral-100 text-stone-dark min-h-screen">
   <!-- 顶部导航栏 -->
-  <header class="sticky top-0 z-50 bg-stone-dark text-white shadow-lg">
-    <div class="container mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center">
-      <h1 class="text-[clamp(1.5rem,3vw,2.2rem)] font-bold mb-3 md:mb-0 flex items-center">
-         启航石雕展示系统
-      </h1>
-      <p class="text-stone-light text-sm md:text-base">传承匠心 · 精雕细琢 · 千年石雕艺术</p>
+  <header class="sticky top-0 bg-white shadow-sm z-50">
+    <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
+      <div class="flex items-center mb-4 md:mb-0">
+        <i class="fa fa-cube text-stone-accent text-2xl mr-2"></i>
+        <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-stone-dark">庭院石雕 · 匠心之作</h1>
+      </div>
+      <p class="text-stone-mid text-sm md:text-base">传承古法工艺 · 打造精品石雕 | 点击查看详情+细节大图</p>
     </div>
   </header>
 
-  <!-- 分类筛选导航 -->
-  <section class="container mx-auto px-4 py-6">
-    <div class="flex flex-wrap justify-center gap-2 md:gap-3 mb-8" id="category-nav">
-      <button class="category-btn btn-active px-4 py-2 rounded-md text-sm md:text-base transition-all" data-category="all">
-        全部作品
-      </button>
-      <button class="category-btn bg-white hover:bg-stone-warm/10 px-4 py-2 rounded-md text-sm md:text-base transition-all" data-category="瑞兽动物类">
-        瑞兽动物类
-      </button>
-      <button class="category-btn bg-white hover:bg-stone-warm/10 px-4 py-2 rounded-md text-sm md:text-base transition-all" data-category="人物造像类">
-        人物造像类
-      </button>
-      <button class="category-btn bg-white hover:bg-stone-warm/10 px-4 py-2 rounded-md text-sm md:text-base transition-all" data-category="宗教法器类">
-        宗教法器类
-      </button>
-      <button class="category-btn bg-white hover:bg-stone-warm/10 px-4 py-2 rounded-md text-sm md:text-base transition-all" data-category="门海">
-        门海
-      </button>
-      <button class="category-btn bg-white hover:bg-stone-warm/10 px-4 py-2 rounded-md text-sm md:text-base transition-all" data-category="拴马柱">
-        拴马柱
-      </button>
-      <button class="category-btn bg-white hover:bg-stone-warm/10 px-4 py-2 rounded-md text-sm md:text-base transition-all" data-category="祥云柱">
-        祥云柱
-      </button>
-      <button class="category-btn bg-white hover:bg-stone-warm/10 px-4 py-2 rounded-md text-sm md:text-base transition-all" data-category="抱鼓石">
-        抱鼓石
-      </button>
-    </div>
-  </section>
+  <main class="container mx-auto px-4 py-8">
+    <!-- 石雕分类筛选栏 -->
+    <section class="mb-10">
+      <div class="flex flex-wrap justify-center gap-2 md:gap-3 bg-white p-3 rounded-xl shadow-sm">
+        <button class="category-btn category-btn-active" data-category="all">全部石雕</button>
+        <button class="category-btn" data-category="baogushi">抱鼓石</button>
+        <button class="category-btn" data-category="menhai">门海</button>
+        <button class="category-btn" data-category="shuanmazhuang">拴马桩</button>
+        <button class="category-btn" data-category="xiangyunzhu">祥云柱</button>
+        <button class="category-btn" data-category="qilin">麒麟</button>
+        <button class="category-btn" data-category="pixiu">貔貅</button>
+        <button class="category-btn" data-category="daxiang">大象</button>
+        <button class="category-btn" data-category="shizi">狮子</button>
+      </div>
+    </section>
 
-  <!-- 石雕作品展示区 -->
-  <main class="container mx-auto px-4 pb-16">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="stone-carving-grid">
-      <!-- 瑞兽动物类 -->
-      <div class="stone-card bg-white rounded-lg overflow-hidden shadow-md card-hover" data-category="瑞兽动物类" data-title="青石成对貔貅石雕" data-imgs='["https://img0.baidu.com/it/u=3091234567,1234567890&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800","https://img0.baidu.com/it/u=1234567890,3091234567&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800","https://img1.baidu.com/it/u=2345678901,4567890123&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800"]'>
-        <img src="https://image.baidu.com/search/detail?adpicid=0&b_applid=8745393188945867793&bdtype=0&commodity=&copyright=&cs=3070639255%2C2084897976&di=7581146417410867201&fr=click-pic&fromurl=http%253A%252F%252Fmt.sohu.com%252Fa%252F856679649_120796346&gsm=1e&hd=&height=0&hot=&ic=&ie=utf-8&imgformat=&imgratio=&imgspn=0&is=0%2C0&isImgSet=&latest=&lid=&lm=&objurl=https%253A%252F%252Fq0.itc.cn%252Fq_70%252Fimages03%252F20250207%252F2a91e6a784cc40c8954e1ef93e436f1e.jpeg&os=3905327302%2C2245234643&pd=image_content&pi=0&pn=10&rn=1&simid=4143654765%2C633834627&tn=baiduimagedetail&width=0&word=青石成对麒麟&z=" alt="青石成对貔貅石雕" class="w-full h-60 object-cover">
-        <div class="p-4">
-          <h3 class="font-bold text-lg">青石成对貔貅石雕</h3>
-          <p class="text-stone-mid text-sm mt-2">瑞兽动物类 · 招财纳福 镇宅辟邪</p>
+    <!-- 石雕展示卡片区域 -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8" id="stone-container">
+      <!-- 抱鼓石 -->
+      <div class="stone-card" data-category="baogushi" 
+        data-imgs='["https://picsum.photos/id/175/1200/900","https://picsum.photos/id/225/1200/900","https://picsum.photos/id/227/1200/900"]'
+        data-title="如意纹抱鼓石"
+        data-intro="经典中式如意纹抱鼓石，入户门墩专用，寓意吉祥如意，门庭兴旺，线条流畅圆润，雕花细腻饱满，是庭院入户的经典石雕摆件。"
+        data-size="高80cm × 宽45cm × 厚22cm (一对)"
+        data-material="天然A级青石"
+        data-craft="古法手工雕刻 + 仿古做旧处理 + 精细打磨">
+        <img src="https://picsum.photos/id/175/600/400" alt="中式庭院抱鼓石" class="w-full h-56 object-cover">
+        <div class="p-5">
+          <h3 class="font-bold text-lg mb-2 text-stone-dark">如意纹抱鼓石</h3>
+          <p class="text-stone-mid text-sm mb-3">青石精雕 庭院入户门墩 仿古做旧工艺</p>
+          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">抱鼓石</span>
         </div>
       </div>
-      <div class="stone-card bg-white rounded-lg overflow-hidden shadow-md card-hover" data-category="瑞兽动物类" data-title="汉白玉石狮摆件" data-imgs='["https://img1.baidu.com/it/u=4567890123,2345678901&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800","https://img0.baidu.com/it/u=5678901234,3456789012&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800"]'>
-        <img src="./images/shishi.jpeg" alt="汉白玉石狮摆件" class="w-full h-60 object-cover">
-        <div class="p-4">
-          <h3 class="font-bold text-lg">汉白玉石狮摆件</h3>
-          <p class="text-stone-mid text-sm mt-2">瑞兽动物类 · 精雕狮子 威武霸气</p>
-        </div>
-      </div>
-
-      <!-- 人物造像类 -->
-      <div class="stone-card bg-white rounded-lg overflow-hidden shadow-md card-hover" data-category="人物造像类" data-title="青石观音造像" data-imgs='["https://img0.baidu.com/it/u=6789012345,4567890123&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800","https://img1.baidu.com/it/u=7890123456,5678901234&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800","https://img0.baidu.com/it/u=8901234567,6789012345&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800"]'>
-        <img src="./images/guanyin.jpeg" alt="青石观音造像" class="w-full h-60 object-cover">
-        <div class="p-4">
-          <h3 class="font-bold text-lg">青石观音造像</h3>
-          <p class="text-stone-mid text-sm mt-2">人物造像类 · 慈眉善目 工艺精湛</p>
-        </div>
-      </div>
-      <div class="stone-card bg-white rounded-lg overflow-hidden shadow-md card-hover" data-category="人物造像类" data-title="晚霞红孔子雕像" data-imgs='["https://img1.baidu.com/it/u=9012345678,7890123456&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800","https://img0.baidu.com/it/u=1234567890,8901234567&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800"]'>
-        <img src="https://img1.baidu.com/it/u=9012345678,7890123456&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800" alt="晚霞红孔子雕像" class="w-full h-60 object-cover">
-        <div class="p-4">
-          <h3 class="font-bold text-lg">晚霞红孔子雕像</h3>
-          <p class="text-stone-mid text-sm mt-2">人物造像类 · 至圣先师 教书育人</p>
-        </div>
-      </div>
-
-      <!-- 宗教法器类 -->
-      <div class="stone-card bg-white rounded-lg overflow-hidden shadow-md card-hover" data-category="宗教法器类" data-title="青石三足香炉" data-imgs='["https://img0.baidu.com/it/u=2345678901,9012345678&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800","https://img1.baidu.com/it/u=3456789012,1234567890&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800"]'>
-        <img src="https://img0.baidu.com/it/u=2345678901,9012345678&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800" alt="青石三足香炉" class="w-full h-60 object-cover">
-        <div class="p-4">
-          <h3 class="font-bold text-lg">青石三足香炉</h3>
-          <p class="text-stone-mid text-sm mt-2">宗教法器类 · 寺庙专用 仿古雕刻</p>
-        </div>
-      </div>
-      <div class="stone-card bg-white rounded-lg overflow-hidden shadow-md card-hover" data-category="宗教法器类" data-title="石雕八宝供桌" data-imgs='["https://img1.baidu.com/it/u=4567890123,2345678901&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800","https://img0.baidu.com/it/u=5678901234,3456789012&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800","https://img1.baidu.com/it/u=6789012345,4567890123&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800"]'>
-        <img src="https://img1.baidu.com/it/u=4567890123,2345678901&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800" alt="石雕八宝供桌" class="w-full h-60 object-cover">
-        <div class="p-4">
-          <h3 class="font-bold text-lg">石雕八宝供桌</h3>
-          <p class="text-stone-mid text-sm mt-2">宗教法器类 · 浮雕八宝 吉祥如意</p>
+      <div class="stone-card" data-category="baogushi"
+        data-imgs='["https://picsum.photos/id/176/1200/900","https://picsum.photos/id/229/1200/900"]'
+        data-title="狮子镇宅抱鼓石"
+        data-intro="狮子瑞兽镇守款抱鼓石，雄狮踩球雌狮抚幼，寓意镇宅辟邪、阖家平安，雕刻立体生动，狮纹清晰，大宅庭院首选石雕门墩。"
+        data-size="高90cm × 宽50cm × 厚25cm (一对)"
+        data-material="一级汉白玉石材"
+        data-craft="深浮雕工艺 + 手工精修纹理 + 哑光防护处理">
+        <img src="https://picsum.photos/id/176/600/400" alt="狮子抱鼓石" class="w-full h-56 object-cover">
+        <div class="p-5">
+          <h3 class="font-bold text-lg mb-2 text-stone-dark">狮子镇宅抱鼓石</h3>
+          <p class="text-stone-mid text-sm mb-3">天然汉白玉 精雕瑞兽 庭院大宅专用</p>
+          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">抱鼓石</span>
         </div>
       </div>
 
       <!-- 门海 -->
-      <div class="stone-card bg-white rounded-lg overflow-hidden shadow-md card-hover" data-category="门海" data-title="青石圆形门海鱼缸" data-imgs='["https://img0.baidu.com/it/u=7890123456,5678901234&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800","https://img1.baidu.com/it/u=8901234567,6789012345&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800"]'>
-        <img src="https://img0.baidu.com/it/u=7890123456,5678901234&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800" alt="青石圆形门海鱼缸" class="w-full h-60 object-cover">
-        <div class="p-4">
-          <h3 class="font-bold text-lg">青石圆形门海鱼缸</h3>
-          <p class="text-stone-mid text-sm mt-2">门海 · 庭院摆放 聚水聚财</p>
+      <div class="stone-card" data-category="menhai"
+        data-imgs='["https://picsum.photos/id/177/1200/900","https://picsum.photos/id/239/1200/900"]'
+        data-title="圆形雕花门海"
+        data-intro="庭院聚财圆形门海水缸，又名太平缸，外壁雕刻缠枝莲纹，寓意富贵连绵、聚财纳福，可养鱼种花，是中式庭院造景核心摆件。"
+        data-size="直径60cm × 高40cm / 直径80cm × 高50cm 双规格"
+        data-material="天然老青石"
+        data-craft="整石挖雕成型 + 浅浮雕花纹 + 仿古包浆处理">
+        <img src="https://picsum.photos/id/177/600/400" alt="庭院门海石雕" class="w-full h-56 object-cover">
+        <div class="p-5">
+          <h3 class="font-bold text-lg mb-2 text-stone-dark">圆形雕花门海</h3>
+          <p class="text-stone-mid text-sm mb-3">青石水缸门海 聚财纳福 庭院造景必备</p>
+          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">门海</span>
+        </div>
+      </div>
+      <div class="stone-card" data-category="menhai"
+        data-imgs='["https://picsum.photos/id/178/1200/900","https://picsum.photos/id/241/1200/900","https://picsum.photos/id/243/1200/900"]'
+        data-title="双龙戏珠门海"
+        data-intro="镇院级双龙戏珠门海，整石大料雕刻，祥龙腾云环绕缸身，气势恢宏，寓意风生水起、家业兴旺，适合大宅庭院正门摆放。"
+        data-size="直径90cm × 高60cm (整石一体)"
+        data-material="天然花岗岩芝麻黑"
+        data-craft="深浮雕龙纹 + 手工镂空雕刻 + 防水防渗处理">
+        <img src="https://picsum.photos/id/178/600/400" alt="仿古石雕门海" class="w-full h-56 object-cover">
+        <div class="p-5">
+          <h3 class="font-bold text-lg mb-2 text-stone-dark">双龙戏珠门海</h3>
+          <p class="text-stone-mid text-sm mb-3">花岗岩大料雕刻 仿古做旧 镇院吉祥</p>
+          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">门海</span>
         </div>
       </div>
 
-      <!-- 拴马柱 -->
-      <div class="stone-card bg-white rounded-lg overflow-hidden shadow-md card-hover" data-category="拴马柱" data-title="祥云纹青石拴马柱" data-imgs='["https://img1.baidu.com/it/u=9012345678,7890123456&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800","https://img0.baidu.com/it/u=1234567890,8901234567&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800","https://img1.baidu.com/it/u=2345678901,9012345678&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800"]'>
-        <img src="https://img1.baidu.com/it/u=9012345678,7890123456&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800" alt="祥云纹青石拴马柱" class="w-full h-60 object-cover">
-        <div class="p-4">
-          <h3 class="font-bold text-lg">祥云纹青石拴马柱</h3>
-          <p class="text-stone-mid text-sm mt-2">拴马柱 · 仿古做旧 庭院装饰</p>
+      <!-- 拴马桩 -->
+      <div class="stone-card" data-category="shuanmazhuang"
+        data-imgs='["https://picsum.photos/id/179/1200/900","https://picsum.photos/id/245/1200/900"]'
+        data-title="胡人驭兽拴马桩"
+        data-intro="仿古经典胡人驭兽拴马桩，柱身雕刻胡人牵瑞兽，古朴大气，是中式庭院、民宿、园林造景的经典石柱摆件，可单放可成排摆放。"
+        data-size="高120cm × 宽20cm × 厚20cm (单根)"
+        data-material="山西老青石"
+        data-craft="手工圆雕工艺 + 自然风化做旧 + 棱角打磨圆润">
+        <img src="https://picsum.photos/id/179/600/400" alt="石雕拴马桩" class="w-full h-56 object-cover">
+        <div class="p-5">
+          <h3 class="font-bold text-lg mb-2 text-stone-dark">胡人驭兽拴马桩</h3>
+          <p class="text-stone-mid text-sm mb-3">青石做旧 庭院装饰石柱 中式古建构件</p>
+          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">拴马桩</span>
+        </div>
+      </div>
+      <div class="stone-card" data-category="shuanmazhuang"
+        data-imgs='["https://picsum.photos/id/180/1200/900","https://picsum.photos/id/247/1200/900","https://picsum.photos/id/249/1200/900"]'
+        data-title="十二生肖拴马桩"
+        data-intro="成套十二生肖瑞兽拴马桩，每根柱顶雕刻一种生肖，神态各异，栩栩如生，寓意圆满吉祥、岁岁平安，适合庭院景观成列摆放。"
+        data-size="⾼150cm × 宽22cm × 厚22cm (单根/十二根成套)"
+        data-material="天然青砂石"
+        data-craft="精细圆雕 + 手工修纹 + 仿古哑光处理">
+        <img src="https://picsum.photos/id/180/600/400" alt="瑞兽拴马桩" class="w-full h-56 object-cover">
+        <div class="p-5">
+          <h3 class="font-bold text-lg mb-2 text-stone-dark">十二生肖拴马桩</h3>
+          <p class="text-stone-mid text-sm mb-3">成套雕刻 精雕细琢 庭院景观石柱</p>
+          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">拴马桩</span>
         </div>
       </div>
 
       <!-- 祥云柱 -->
-      <div class="stone-card bg-white rounded-lg overflow-hidden shadow-md card-hover" data-category="祥云柱" data-title="盘龙祥云柱华表" data-imgs='["https://img0.baidu.com/it/u=3456789012,1234567890&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800","https://img1.baidu.com/it/u=4567890123,2345678901&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800"]'>
-        <img src="https://img0.baidu.com/it/u=3456789012,1234567890&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800" alt="盘龙祥云柱华表" class="w-full h-60 object-cover">
-        <div class="p-4">
-          <h3 class="font-bold text-lg">盘龙祥云柱华表</h3>
-          <p class="text-stone-mid text-sm mt-2">祥云柱 · 浮雕盘龙 气势恢宏</p>
+      <div class="stone-card" data-category="xiangyunzhu"
+        data-imgs='["https://picsum.photos/id/181/1200/900","https://picsum.photos/id/251/1200/900"]'
+        data-title="多层祥云柱"
+        data-intro="中式祥云柱花架，柱身雕刻层叠祥云纹，寓意步步高升、吉祥如意，可做花台、盆景底座、庭院装饰柱，百搭各种庭院风格。"
+        data-size="高80cm/100cm/120cm 三规格，直径30cm"
+        data-material="一级汉白玉"
+        data-craft="浅浮雕祥云纹 + 手工打磨抛光 + 防水防护处理">
+        <img src="https://picsum.photos/id/181/600/400" alt="祥云柱石雕" class="w-full h-56 object-cover">
+        <div class="p-5">
+          <h3 class="font-bold text-lg mb-2 text-stone-dark">多层祥云柱</h3>
+          <p class="text-stone-mid text-sm mb-3">汉白玉祥云柱 庭院花架柱 风水石柱</p>
+          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">祥云柱</span>
+        </div>
+      </div>
+      <div class="stone-card" data-category="xiangyunzhu"
+        data-imgs='["https://picsum.photos/id/182/1200/900","https://picsum.photos/id/253/1200/900","https://picsum.photos/id/255/1200/900"]'
+        data-title="盘龙祥云柱"
+        data-intro="镇宅级盘龙祥云柱，柱身浮雕腾龙缠绕祥云，龙纹矫健有力，祥云飘逸灵动，寓意龙腾四海、事业兴旺，是庭院核心景观石雕。"
+        data-size="高180cm × 直径40cm (单根/一对)"
+        data-material="天然青石大料"
+        data-craft="深浮雕龙纹 + 手工精雕细节 + 仿古做旧包浆">
+        <img src="https://picsum.photos/id/182/600/400" alt="盘龙祥云柱" class="w-full h-56 object-cover">
+        <div class="p-5">
+          <h3 class="font-bold text-lg mb-2 text-stone-dark">盘龙祥云柱</h3>
+          <p class="text-stone-mid text-sm mb-3">青石浮雕龙纹 庭院镇宅石柱 大气磅礴</p>
+          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">祥云柱</span>
         </div>
       </div>
 
-      <!-- 抱鼓石 -->
-      <div class="stone-card bg-white rounded-lg overflow-hidden shadow-md card-hover" data-category="抱鼓石" data-title="狮子头青石抱鼓石" data-imgs='["https://img1.baidu.com/it/u=5678901234,3456789012&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800","https://img0.baidu.com/it/u=6789012345,4567890123&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800","https://img1.baidu.com/it/u=7890123456,5678901234&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800"]'>
-        <img src="https://img1.baidu.com/it/u=5678901234,3456789012&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800" alt="狮子头青石抱鼓石" class="w-full h-60 object-cover">
-        <div class="p-4">
-          <h3 class="font-bold text-lg">狮子头青石抱鼓石</h3>
-          <p class="text-stone-mid text-sm mt-2">抱鼓石 · 大门两侧 镇宅纳祥</p>
+      <!-- 麒麟 -->
+      <div class="stone-card" data-category="qilin"
+        data-imgs='["https://picsum.photos/id/183/1200/900","https://picsum.photos/id/257/1200/900"]'
+        data-title="招财送子麒麟"
+        data-intro="瑞兽麒麟成对摆件，麒麟脚踏祥云，昂首向前，寓意招财纳福、送子添喜、镇宅辟邪，是中式庭院入户的吉祥瑞兽石雕首选。"
+        data-size="高60cm × 长50cm × 宽30cm (一对)"
+        data-material="天然晚霞红石材"
+        data-craft="全立体圆雕 + 手工打磨纹理 + 哑光防护处理">
+        <img src="https://picsum.photos/id/183/600/400" alt="石雕麒麟" class="w-full h-56 object-cover">
+        <div class="p-5">
+          <h3 class="font-bold text-lg mb-2 text-stone-dark">招财送子麒麟</h3>
+          <p class="text-stone-mid text-sm mb-3">成对雕刻 瑞兽麒麟 镇宅纳福 庭院摆件</p>
+          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">麒麟</span>
         </div>
       </div>
-      <div class="stone-card bg-white rounded-lg overflow-hidden shadow-md card-hover" data-category="抱鼓石" data-title="麒麟浮雕抱鼓石" data-imgs='["https://img0.baidu.com/it/u=8901234567,6789012345&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800","https://img1.baidu.com/it/u=9012345678,7890123456&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800"]'>
-        <img src="https://img0.baidu.com/it/u=8901234567,6789012345&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=800" alt="麒麟浮雕抱鼓石" class="w-full h-60 object-cover">
-        <div class="p-4">
-          <h3 class="font-bold text-lg">麒麟浮雕抱鼓石</h3>
-          <p class="text-stone-mid text-sm mt-2">抱鼓石 · 祥瑞麒麟 富贵吉祥</p>
+
+      <!-- 貔貅 -->
+      <div class="stone-card" data-category="pixiu"
+        data-imgs='["https://picsum.photos/id/184/1200/900","https://picsum.photos/id/259/1200/900"]'
+        data-title="聚财貔貅摆件"
+        data-intro="经典守财貔貅石雕，貔貅独角卷尾，口衔铜钱，寓意招财进宝、守财聚富，只进不出，适合庭院入户、玄关摆放，风水极佳。"
+        data-size="高50cm × 长60cm × 宽25cm (一对)"
+        data-material="天然青石"
+        data-craft="立体圆雕 + 手工精修细节 + 仿古做旧处理">
+        <img src="https://picsum.photos/id/184/600/400" alt="石雕貔貅" class="w-full h-56 object-cover">
+        <div class="p-5">
+          <h3 class="font-bold text-lg mb-2 text-stone-dark">聚财貔貅摆件</h3>
+          <p class="text-stone-mid text-sm mb-3">天然青石雕刻 守财瑞兽 庭院入户摆放</p>
+          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">貔貅</span>
         </div>
       </div>
-    </div>
+
+      <!-- 大象 -->
+      <div class="stone-card" data-category="daxiang"
+        data-imgs='["https://picsum.photos/id/185/1200/900","https://picsum.photos/id/261/1200/900","https://picsum.photos/id/263/1200/900"]'
+        data-title="吉祥如意石象"
+        data-intro="吸财纳福吉祥石象，大象卷鼻托如意，寓意吉祥如意、吸财聚福、阖家安康，成对摆放于庭院入户两侧，是经典风水石雕摆件。"
+        data-size="高70cm × 长80cm × 宽40cm (一对)"
+        data-material="一级汉白玉 / 青石 双材质可选"
+        data-craft="全立体圆雕 + 手工打磨光滑 + 防水防裂处理">
+        <img src="https://picsum.photos/id/185/600/400" alt="石雕大象" class="w-full h-56 object-cover">
+        <div class="p-5">
+          <h3 class="font-bold text-lg mb-2 text-stone-dark">吉祥如意石象</h3>
+          <p class="text-stone-mid text-sm mb-3">汉白玉大象 吸财纳福 成对摆放 庭院镇宅</p>
+          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">大象</span>
+        </div>
+      </div>
+
+      <!-- 狮子 -->
+      <div class="stone-card" data-category="shizi"
+        data-imgs='["https://picsum.photos/id/186/1200/900","https://picsum.photos/id/265/1200/900"]'
+        data-title="北京狮石雕一对"
+        data-intro="经典京派镇宅石狮，雄狮踩绣球威震八方，雌狮抚幼狮子孙绵延，雕刻威武大气，神态庄严，是大宅庭院入户镇守的顶级石雕摆件。"
+        data-size="高100cm/120cm/150cm 多规格 (一对)"
+        data-material="天然花岗岩芝麻白"
+        data-craft="全立体圆雕 + 手工精雕毛发纹理 + 哑光防护处理">
+        <img src="https://picsum.photos/id/186/600/400" alt="石雕狮子" class="w-full h-56 object-cover">
+        <div class="p-5">
+          <h3 class="font-bold text-lg mb-2 text-stone-dark">北京狮石雕一对</h3>
+          <p class="text-stone-mid text-sm mb-3">花岗岩精雕 镇宅石狮 庭院大宅入户摆件</p>
+          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">狮子</span>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <!-- 大图预览模态框 (默认隐藏) -->
-  <div id="image-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex flex-col items-center justify-center p-4">
-    <button id="close-modal" class="absolute top-4 right-6 text-white text-3xl hover:text-stone-light transition-colors">
-      <i class="fa fa-times"></i>
+  <!-- 页脚 -->
+  <footer class="bg-stone-dark text-white mt-16 py-8">
+    <div class="container mx-auto px-4 text-center">
+      <p class="mb-2">匠心石雕 · 专注庭院古建石雕定制</p>
+      <p class="text-stone-light text-sm">所有石雕支持尺寸定制 | 古法工艺 手工精雕 | 点击产品卡片查看完整详情+细节大图</p>
+    </div>
+  </footer>
+
+  <!-- 图片详情弹窗遮罩层 (带完整简介+尺寸+材质+工艺) -->
+  <div id="detailModal" class="fixed inset-0 bg-black/85 z-[999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 p-4">
+    <button id="closeModal" class="modal-btn absolute top-5 right-5">
+      <i class="fa fa-times text-xl"></i>
     </button>
-    <button id="prev-img" class="absolute left-4 top-1/2 -translate-y-1/2 text-white text-4xl hover:text-stone-light transition-colors px-2">
-      <i class="fa fa-angle-left"></i>
+    <button id="prevImg" class="modal-btn absolute left-5 md:left-8">
+      <i class="fa fa-chevron-left text-xl"></i>
     </button>
-    <button id="next-img" class="absolute right-4 top-1/2 -translate-y-1/2 text-white text-4xl hover:text-stone-light transition-colors px-2">
-      <i class="fa fa-angle-right"></i>
+    <button id="nextImg" class="modal-btn absolute right-5 md:right-8">
+      <i class="fa fa-chevron-right text-xl"></i>
     </button>
-    <h2 id="modal-title" class="text-white text-xl md:text-2xl mb-4 text-center"></h2>
-    <img id="modal-main-img" src="" alt="石雕大图" class="max-w-full max-h-[75vh] object-contain img-scale rounded-md">
-    <div id="thumbnails-container" class="flex gap-2 mt-6 overflow-x-auto pb-2 w-full justify-center">
-      <!-- 缩略图动态生成 -->
+
+    <!-- 弹窗核心内容：响应式 左图右文/上图下文 -->
+    <div class="w-full max-w-6xl max-h-[90vh] flex flex-col lg:flex-row gap-6 items-center bg-black/30 backdrop-blur-sm rounded-xl p-6 overflow-auto">
+      <!-- 左侧：高清轮播图片区 -->
+      <div class="flex-1 min-w-0">
+        <h2 id="modalTitle" class="text-white text-2xl font-bold text-center mb-4"></h2>
+        <img id="currentImg" src="" alt="石雕细节大图" class="detail-img w-full h-auto max-h-[60vh] object-contain rounded-lg">
+        <div class="flex justify-center gap-2 mt-4">
+          <span id="imgIndicator" class="text-white bg-white/20 px-3 py-1 rounded-full text-sm">1/1</span>
+        </div>
+      </div>
+
+      <!-- 右侧：石雕完整信息区 -->
+      <div class="flex-1 min-w-0 bg-white/5 rounded-lg p-5 border border-white/10">
+        <div class="mb-4">
+          <p id="modalIntro" class="text-white/95 leading-relaxed text-lg"></p>
+        </div>
+        <div class="space-y-1">
+          <div class="stone-info-item">
+            <i class="fa fa-ruler-combined text-stone-accent"></i>
+            <div><span class="text-white font-medium mr-2">产品尺寸：</span><span id="modalSize"></span></div>
+          </div>
+          <div class="stone-info-item">
+            <i class="fa fa-cube text-stone-accent"></i>
+            <div><span class="text-white font-medium mr-2">雕刻材质：</span><span id="modalMaterial"></span></div>
+          </div>
+          <div class="stone-info-item">
+            <i class="fa fa-hand-scissors-o text-stone-accent"></i>
+            <div><span class="text-white font-medium mr-2">工艺特点：</span><span id="modalCraft"></span></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
-    // 获取DOM元素
+    // ========== 原有筛选功能 完整保留 ==========
     const categoryBtns = document.querySelectorAll('.category-btn');
     const stoneCards = document.querySelectorAll('.stone-card');
-    const imageModal = document.getElementById('image-modal');
-    const modalMainImg = document.getElementById('modal-main-img');
-    const modalTitle = document.getElementById('modal-title');
-    const thumbnailsContainer = document.getElementById('thumbnails-container');
-    const closeModal = document.getElementById('close-modal');
-    const prevImg = document.getElementById('prev-img');
-    const nextImg = document.getElementById('next-img');
 
-    // 当前图片索引和图片列表
-    let currentImgIndex = 0;
-    let currentImgList = [];
-
-    // 1. 分类筛选功能
     categoryBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        // 切换按钮样式
-        categoryBtns.forEach(b => b.classList.remove('btn-active'));
-        btn.classList.add('btn-active');
-        
-        const category = btn.getAttribute('data-category');
-        
-        // 筛选卡片
-        stoneCards.forEach(card => {
-          const cardCategory = card.getAttribute('data-category');
-          if (category === 'all' || cardCategory === category) {
-            card.classList.remove('hidden');
-          } else {
-            card.classList.add('hidden');
-          }
-        });
+      btn.addEventListener('click', function() {
+        categoryBtns.forEach(b => b.classList.remove('category-btn-active'));
+        this.classList.add('category-btn-active');
+        const selectedCategory = this.getAttribute('data-category');
+        filterStones(selectedCategory);
       });
     });
 
-    // 2. 打开大图预览
+    function filterStones(category) {
+      stoneCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(10px)';
+        card.style.pointerEvents = 'none';
+
+        setTimeout(() => {
+          const cardCategory = card.getAttribute('data-category');
+          if (category === 'all' || cardCategory === category) {
+            card.style.display = 'block';
+            setTimeout(() => {
+              card.style.opacity = '1';
+              card.style.transform = 'translateY(0)';
+              card.style.pointerEvents = 'auto';
+            }, index * 50);
+          } else {
+            card.style.display = 'none';
+          }
+        }, 200);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      stoneCards.forEach((card, index) => {
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, index * 50);
+      });
+    });
+
+    // ========== 核心：弹窗展示【简介+尺寸+材质+工艺+多图轮播】+ 修复按钮点击 ==========
+    const detailModal = document.getElementById('detailModal');
+    const closeModal = document.getElementById('closeModal');
+    const prevImg = document.getElementById('prevImg');
+    const nextImg = document.getElementById('nextImg');
+    const currentImg = document.getElementById('currentImg');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalIntro = document.getElementById('modalIntro');
+    const modalSize = document.getElementById('modalSize');
+    const modalMaterial = document.getElementById('modalMaterial');
+    const modalCraft = document.getElementById('modalCraft');
+    const imgIndicator = document.getElementById('imgIndicator');
+    
+    let imgList = [];
+    let currentIndex = 0;
+
+    // 为每个卡片绑定点击事件 - 加载完整信息
     stoneCards.forEach(card => {
       card.addEventListener('click', () => {
-        const title = card.getAttribute('data-title');
-        const imgs = JSON.parse(card.getAttribute('data-imgs'));
+        imgList = JSON.parse(card.getAttribute('data-imgs'));
+        modalTitle.textContent = card.getAttribute('data-title');
+        modalIntro.textContent = card.getAttribute('data-intro');
+        modalSize.textContent = card.getAttribute('data-size');
+        modalMaterial.textContent = card.getAttribute('data-material');
+        modalCraft.textContent = card.getAttribute('data-craft');
+        currentIndex = 0;
         
-        // 设置模态框数据
-        modalTitle.textContent = title;
-        currentImgList = imgs;
-        currentImgIndex = 0;
-        modalMainImg.src = imgs[0];
+        currentImg.src = imgList[currentIndex];
+        imgIndicator.textContent = `${currentIndex+1}/${imgList.length}`;
         
-        // 生成缩略图
-        generateThumbnails(imgs);
-        
-        // 显示模态框
-        imageModal.classList.remove('hidden');
+        detailModal.classList.remove('hidden');
+        setTimeout(() => {
+          detailModal.style.opacity = '1';
+        }, 10);
         document.body.style.overflow = 'hidden';
       });
     });
 
-    // 生成缩略图
-    function generateThumbnails(imgs) {
-      thumbnailsContainer.innerHTML = '';
-      imgs.forEach((img, index) => {
-        const thumbnail = document.createElement('img');
-        thumbnail.src = img;
-        thumbnail.className = `w-20 h-16 object-cover rounded ${index === 0 ? 'border-2 border-stone-warm' : 'border-2 border-transparent hover:border-stone-light'}`;
-        thumbnail.addEventListener('click', () => {
-          currentImgIndex = index;
-          modalMainImg.src = img;
-          updateThumbnailActive();
-        });
-        thumbnailsContainer.appendChild(thumbnail);
-      });
+    // 关闭弹窗
+    function hideModal() {
+      detailModal.style.opacity = '0';
+      setTimeout(() => {
+        detailModal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+      }, 300);
     }
 
-    // 更新缩略图选中状态
-    function updateThumbnailActive() {
-      const thumbnails = thumbnailsContainer.querySelectorAll('img');
-      thumbnails.forEach((thumb, index) => {
-        if (index === currentImgIndex) {
-          thumb.classList.remove('border-transparent', 'hover:border-stone-light');
-          thumb.classList.add('border-stone-warm');
-        } else {
-          thumb.classList.remove('border-stone-warm');
-          thumb.classList.add('border-transparent', 'hover:border-stone-light');
-        }
-      });
+    // 切换图片 保留淡入淡出动画
+    function changeImg(direction) {
+      currentIndex += direction;
+      if (currentIndex < 0) currentIndex = imgList.length - 1;
+      if (currentIndex >= imgList.length) currentIndex = 0;
+      currentImg.style.opacity = '0';
+      setTimeout(() => {
+        currentImg.src = imgList[currentIndex];
+        currentImg.style.opacity = '1';
+        imgIndicator.textContent = `${currentIndex+1}/${imgList.length}`;
+      }, 200);
     }
 
-    // 3. 关闭模态框
-    closeModal.addEventListener('click', closeModalFunc);
-    imageModal.addEventListener('click', (e) => {
-      if (e.target === imageModal) closeModalFunc();
-    });
-
-    function closeModalFunc() {
-      imageModal.classList.add('hidden');
-      document.body.style.overflow = 'auto';
-    }
-
-    // 4. 上一张/下一张图片切换
-    prevImg.addEventListener('click', () => {
-      currentImgIndex = (currentImgIndex - 1 + currentImgList.length) % currentImgList.length;
-      modalMainImg.src = currentImgList[currentImgIndex];
-      updateThumbnailActive();
-    });
-
-    nextImg.addEventListener('click', () => {
-      currentImgIndex = (currentImgIndex + 1) % currentImgList.length;
-      modalMainImg.src = currentImgList[currentImgIndex];
-      updateThumbnailActive();
-    });
-
-    // 键盘方向键切换图片 + ESC关闭
-    document.addEventListener('keydown', (e) => {
-      if (!imageModal.classList.contains('hidden')) {
-        if (e.key === 'ArrowLeft') prevImg.click();
-        if (e.key === 'ArrowRight') nextImg.click();
-        if (e.key === 'Escape') closeModalFunc();
-      }
-    });
+    // ✅ 修复关键：按钮绑定事件 + 阻止冒泡防止穿透
+    closeModal.addEventListener('click', (e)=>{e.stopPropagation();hideModal();});
+    prevImg.addEventListener('click', (e)=>{e.stopPropagation();changeImg(-1);});
+    nextImg.addEventListener('click', (e)=>{e.stopPropagation();changeImg(1);});
+    detailModal.addEventListener('click', (e) => { if (e.target === detailModal) hideModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !detailModal.classList.contains('hidden')) hideModal(); });
   </script>
 </body>
 </html>
