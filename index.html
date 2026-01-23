@@ -1,448 +1,680 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>庭院石雕 - 中式石雕精品展示系统 | 含详情+尺寸+材质+工艺</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-  <script>
-    // Tailwind 配置 - 新中式石雕主题配色
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            stone: {
-              dark: '#2D3748',
-              mid: '#4A5568',
-              light: '#E2E8F0',
-              accent: '#9C7C4A'
-            },
-            neutral: {
-              100: '#F7F5F2',
-              200: '#E9E4DD',
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>威县 - 冀南明珠 魅力威州</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- 配置Tailwind自定义颜色 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        weixian: {
+                            primary: '#165DFF', // 主色调-蓝色（代表滏阳河）
+                            secondary: '#E67E22', // 辅助色-橙色（代表威县火烧）
+                            dark: '#1E293B', // 深色文本
+                            light: '#F8FAFC', // 浅色背景
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
             }
-          },
-          fontFamily: {
-            sans: ['Inter', 'system-ui', 'sans-serif'],
-          },
-        },
-      }
-    }
-  </script>
-  <style type="text/tailwindcss">
-    @layer utilities {
-      .stone-card {
-        @apply bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer;
-      }
-      .category-btn {
-        @apply px-4 py-2 rounded-full transition-all duration-300 hover:bg-stone-accent/10 text-sm md:text-base;
-      }
-      .category-btn-active {
-        @apply bg-stone-accent text-white font-medium;
-      }
-      .modal-btn {
-        @apply bg-white/90 hover:bg-stone-accent text-white w-10 h-10 rounded-full flex items-center justify-center shadow-md transition-all duration-300 hover:scale-110 z-[1000];
-      }
-      .stone-info-item {
-        @apply flex items-center gap-2 py-1.5 border-b border-white/10 text-white/95;
-      }
-    }
-
-    @keyframes fadeIn {
-      0% { opacity: 0; transform: translateY(10px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fadeIn {
-      animation: fadeIn 0.5s ease forwards;
-    }
-    /* 图片淡入淡出过渡 */
-    .detail-img {
-      transition: opacity 0.4s ease;
-    }
-  </style>
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            }
+            .bg-blur {
+                backdrop-filter: blur(8px);
+            }
+        }
+    </style>
 </head>
-<body class="bg-neutral-100 text-stone-dark min-h-screen">
-  <!-- 顶部导航栏 -->
-  <header class="sticky top-0 bg-white shadow-sm z-50">
-    <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
-      <div class="flex items-center mb-4 md:mb-0">
-        <i class="fa fa-cube text-stone-accent text-2xl mr-2"></i>
-        <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-stone-dark">庭院石雕 · 匠心之作</h1>
-      </div>
-      <p class="text-stone-mid text-sm md:text-base">传承古法工艺 · 打造精品石雕 | 点击查看详情+细节大图</p>
-    </div>
-  </header>
+<body class="font-sans text-weixian-dark bg-weixian-light">
+    <!-- 导航栏 -->
+    <header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 bg-white/90 bg-blur shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-2">
+                <i class="fa-solid fa-landmark text-weixian-primary text-2xl"></i>
+                <span class="text-xl font-bold text-weixian-primary">魅力威县</span>
+            </a>
+            
+            <!-- 桌面导航 -->
+            <nav class="hidden md:flex gap-6">
+                <a href="#overview" class="hover:text-weixian-primary transition-colors">威县概况</a>
+                <a href="#food" class="hover:text-weixian-primary transition-colors">特色美食</a>
+                <a href="#scenic" class="hover:text-weixian-primary transition-colors">旅游景点</a>
+                <a href="#culture" class="hover:text-weixian-primary transition-colors">文化底蕴</a>
+                <a href="#contact" class="hover:text-weixian-primary transition-colors">联系我们</a>
+            </nav>
+            
+            <!-- 移动端菜单按钮 -->
+            <button id="menuBtn" class="md:hidden text-weixian-dark text-2xl">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div id="mobileMenu" class="md:hidden hidden bg-white shadow-lg absolute w-full">
+            <div class="container mx-auto px-4 py-2 flex flex-col gap-3">
+                <a href="#overview" class="py-2 hover:text-weixian-primary transition-colors">威县概况</a>
+                <a href="#food" class="py-2 hover:text-weixian-primary transition-colors">特色美食</a>
+                <a href="#scenic" class="py-2 hover:text-weixian-primary transition-colors">旅游景点</a>
+                <a href="#culture" class="py-2 hover:text-weixian-primary transition-colors">文化底蕴</a>
+                <a href="#contact" class="py-2 hover:text-weixian-primary transition-colors">联系我们</a>
+            </div>
+        </div>
+    </header>
 
-  <main class="container mx-auto px-4 py-8">
-    <!-- 石雕分类筛选栏 -->
-    <section class="mb-10">
-      <div class="flex flex-wrap justify-center gap-2 md:gap-3 bg-white p-3 rounded-xl shadow-sm">
-        <button class="category-btn category-btn-active" data-category="all">全部石雕</button>
-        <button class="category-btn" data-category="baogushi">抱鼓石</button>
-        <button class="category-btn" data-category="menhai">门海</button>
-        <button class="category-btn" data-category="shuanmazhuang">拴马桩</button>
-        <button class="category-btn" data-category="xiangyunzhu">祥云柱</button>
-        <button class="category-btn" data-category="qilin">麒麟</button>
-        <button class="category-btn" data-category="pixiu">貔貅</button>
-        <button class="category-btn" data-category="daxiang">大象</button>
-        <button class="category-btn" data-category="shizi">狮子</button>
-      </div>
+    <!-- 英雄区 -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="./images/weixianquanjing.jpeg" alt="威县全景" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/50"></div>
+        </div>
+        <div class="relative z-10 text-center px-4">
+            <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-bold text-white text-shadow mb-4">
+                冀南明珠 · 魅力威县
+            </h1>
+            <p class="text-[clamp(1rem,3vw,1.5rem)] text-white text-shadow mb-8 max-w-2xl mx-auto">
+                千年古县 · 棉纺之乡 · 火烧之都 · 葡萄产地
+            </p>
+            <a href="#overview" class="inline-block bg-weixian-primary hover:bg-weixian-primary/90 text-white font-medium py-3 px-8 rounded-full transition-all transform hover:scale-105">
+                了解更多 <i class="fa-solid fa-arrow-down ml-2"></i>
+            </a>
+        </div>
+        <div class="absolute bottom-8 left-0 right-0 text-center">
+            <a href="#overview" class="text-white animate-bounce inline-block">
+                <i class="fa-solid fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
     </section>
 
-    <!-- 石雕展示卡片区域 -->
-    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8" id="stone-container">
-      <!-- 抱鼓石 -->
-      <div class="stone-card" data-category="baogushi" 
-        data-imgs='["https://picsum.photos/id/175/1200/900","https://picsum.photos/id/225/1200/900","https://picsum.photos/id/227/1200/900"]'
-        data-title="如意纹抱鼓石"
-        data-intro="经典中式如意纹抱鼓石，入户门墩专用，寓意吉祥如意，门庭兴旺，线条流畅圆润，雕花细腻饱满，是庭院入户的经典石雕摆件。"
-        data-size="高80cm × 宽45cm × 厚22cm (一对)"
-        data-material="天然A级青石"
-        data-craft="古法手工雕刻 + 仿古做旧处理 + 精细打磨">
-        <img src="https://picsum.photos/id/175/600/400" alt="中式庭院抱鼓石" class="w-full h-56 object-cover">
-        <div class="p-5">
-          <h3 class="font-bold text-lg mb-2 text-stone-dark">如意纹抱鼓石</h3>
-          <p class="text-stone-mid text-sm mb-3">青石精雕 庭院入户门墩 仿古做旧工艺</p>
-          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">抱鼓石</span>
-        </div>
-      </div>
-      <div class="stone-card" data-category="baogushi"
-        data-imgs='["https://picsum.photos/id/176/1200/900","https://picsum.photos/id/229/1200/900"]'
-        data-title="狮子镇宅抱鼓石"
-        data-intro="狮子瑞兽镇守款抱鼓石，雄狮踩球雌狮抚幼，寓意镇宅辟邪、阖家平安，雕刻立体生动，狮纹清晰，大宅庭院首选石雕门墩。"
-        data-size="高90cm × 宽50cm × 厚25cm (一对)"
-        data-material="一级汉白玉石材"
-        data-craft="深浮雕工艺 + 手工精修纹理 + 哑光防护处理">
-        <img src="https://picsum.photos/id/176/600/400" alt="狮子抱鼓石" class="w-full h-56 object-cover">
-        <div class="p-5">
-          <h3 class="font-bold text-lg mb-2 text-stone-dark">狮子镇宅抱鼓石</h3>
-          <p class="text-stone-mid text-sm mb-3">天然汉白玉 精雕瑞兽 庭院大宅专用</p>
-          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">抱鼓石</span>
-        </div>
-      </div>
+    <!-- 威县概况 -->
+    <section id="overview" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold mb-4">威县概况</h2>
+                <div class="w-20 h-1 bg-weixian-primary mx-auto mb-6"></div>
+                <p class="text-gray-600 max-w-3xl mx-auto">威县隶属于河北省邢台市，位于河北省南部，邢台市东部，是冀南地区重要的交通枢纽和商贸重镇。</p>
+            </div>
 
-      <!-- 门海 -->
-      <div class="stone-card" data-category="menhai"
-        data-imgs='["https://picsum.photos/id/177/1200/900","https://picsum.photos/id/239/1200/900"]'
-        data-title="圆形雕花门海"
-        data-intro="庭院聚财圆形门海水缸，又名太平缸，外壁雕刻缠枝莲纹，寓意富贵连绵、聚财纳福，可养鱼种花，是中式庭院造景核心摆件。"
-        data-size="直径60cm × 高40cm / 直径80cm × 高50cm 双规格"
-        data-material="天然老青石"
-        data-craft="整石挖雕成型 + 浅浮雕花纹 + 仿古包浆处理">
-        <img src="https://picsum.photos/id/177/600/400" alt="庭院门海石雕" class="w-full h-56 object-cover">
-        <div class="p-5">
-          <h3 class="font-bold text-lg mb-2 text-stone-dark">圆形雕花门海</h3>
-          <p class="text-stone-mid text-sm mb-3">青石水缸门海 聚财纳福 庭院造景必备</p>
-          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">门海</span>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <img src="./images/zhaosanduo.jpeg" alt="威县风光" class="rounded-lg shadow-lg w-full h-auto object-cover">
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-start gap-3">
+                        <i class="fa-solid fa-map-marker-alt text-weixian-primary text-xl mt-1"></i>
+                        <div>
+                            <h3 class="font-bold text-xl">地理位置</h3>
+                            <p class="text-gray-600">威县地处华北平原南部，北纬36°52′至37°18′，东经115°13′至115°34′之间，总面积1012平方公里。</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="fa-solid fa-users text-weixian-primary text-xl mt-1"></i>
+                        <div>
+                            <h3 class="font-bold text-xl">人口概况</h3>
+                            <p class="text-gray-600">全县常住人口约60万，辖11镇5乡，是邢台市人口大县之一。</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="fa-solid fa-seedling text-weixian-primary text-xl mt-1"></i>
+                        <div>
+                            <h3 class="font-bold text-xl">特色产业</h3>
+                            <p class="text-gray-600">威县是全国优质棉生产基地、河北省葡萄之乡，同时拥有汽车配件、纺织服装等特色产业。</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i class="fa-solid fa-road text-weixian-primary text-xl mt-1"></i>
+                        <div>
+                            <h3 class="font-bold text-xl">交通优势</h3>
+                            <p class="text-gray-600">青银高速、大广高速、邢临高速穿境而过，京九铁路、邯黄铁路在此交汇，交通四通八达。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="stone-card" data-category="menhai"
-        data-imgs='["https://picsum.photos/id/178/1200/900","https://picsum.photos/id/241/1200/900","https://picsum.photos/id/243/1200/900"]'
-        data-title="双龙戏珠门海"
-        data-intro="镇院级双龙戏珠门海，整石大料雕刻，祥龙腾云环绕缸身，气势恢宏，寓意风生水起、家业兴旺，适合大宅庭院正门摆放。"
-        data-size="直径90cm × 高60cm (整石一体)"
-        data-material="天然花岗岩芝麻黑"
-        data-craft="深浮雕龙纹 + 手工镂空雕刻 + 防水防渗处理">
-        <img src="https://picsum.photos/id/178/600/400" alt="仿古石雕门海" class="w-full h-56 object-cover">
-        <div class="p-5">
-          <h3 class="font-bold text-lg mb-2 text-stone-dark">双龙戏珠门海</h3>
-          <p class="text-stone-mid text-sm mb-3">花岗岩大料雕刻 仿古做旧 镇院吉祥</p>
-          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">门海</span>
-        </div>
-      </div>
-
-      <!-- 拴马桩 -->
-      <div class="stone-card" data-category="shuanmazhuang"
-        data-imgs='["https://picsum.photos/id/179/1200/900","https://picsum.photos/id/245/1200/900"]'
-        data-title="胡人驭兽拴马桩"
-        data-intro="仿古经典胡人驭兽拴马桩，柱身雕刻胡人牵瑞兽，古朴大气，是中式庭院、民宿、园林造景的经典石柱摆件，可单放可成排摆放。"
-        data-size="高120cm × 宽20cm × 厚20cm (单根)"
-        data-material="山西老青石"
-        data-craft="手工圆雕工艺 + 自然风化做旧 + 棱角打磨圆润">
-        <img src="https://picsum.photos/id/179/600/400" alt="石雕拴马桩" class="w-full h-56 object-cover">
-        <div class="p-5">
-          <h3 class="font-bold text-lg mb-2 text-stone-dark">胡人驭兽拴马桩</h3>
-          <p class="text-stone-mid text-sm mb-3">青石做旧 庭院装饰石柱 中式古建构件</p>
-          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">拴马桩</span>
-        </div>
-      </div>
-      <div class="stone-card" data-category="shuanmazhuang"
-        data-imgs='["https://picsum.photos/id/180/1200/900","https://picsum.photos/id/247/1200/900","https://picsum.photos/id/249/1200/900"]'
-        data-title="十二生肖拴马桩"
-        data-intro="成套十二生肖瑞兽拴马桩，每根柱顶雕刻一种生肖，神态各异，栩栩如生，寓意圆满吉祥、岁岁平安，适合庭院景观成列摆放。"
-        data-size="⾼150cm × 宽22cm × 厚22cm (单根/十二根成套)"
-        data-material="天然青砂石"
-        data-craft="精细圆雕 + 手工修纹 + 仿古哑光处理">
-        <img src="https://picsum.photos/id/180/600/400" alt="瑞兽拴马桩" class="w-full h-56 object-cover">
-        <div class="p-5">
-          <h3 class="font-bold text-lg mb-2 text-stone-dark">十二生肖拴马桩</h3>
-          <p class="text-stone-mid text-sm mb-3">成套雕刻 精雕细琢 庭院景观石柱</p>
-          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">拴马桩</span>
-        </div>
-      </div>
-
-      <!-- 祥云柱 -->
-      <div class="stone-card" data-category="xiangyunzhu"
-        data-imgs='["https://picsum.photos/id/181/1200/900","https://picsum.photos/id/251/1200/900"]'
-        data-title="多层祥云柱"
-        data-intro="中式祥云柱花架，柱身雕刻层叠祥云纹，寓意步步高升、吉祥如意，可做花台、盆景底座、庭院装饰柱，百搭各种庭院风格。"
-        data-size="高80cm/100cm/120cm 三规格，直径30cm"
-        data-material="一级汉白玉"
-        data-craft="浅浮雕祥云纹 + 手工打磨抛光 + 防水防护处理">
-        <img src="https://picsum.photos/id/181/600/400" alt="祥云柱石雕" class="w-full h-56 object-cover">
-        <div class="p-5">
-          <h3 class="font-bold text-lg mb-2 text-stone-dark">多层祥云柱</h3>
-          <p class="text-stone-mid text-sm mb-3">汉白玉祥云柱 庭院花架柱 风水石柱</p>
-          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">祥云柱</span>
-        </div>
-      </div>
-      <div class="stone-card" data-category="xiangyunzhu"
-        data-imgs='["https://picsum.photos/id/182/1200/900","https://picsum.photos/id/253/1200/900","https://picsum.photos/id/255/1200/900"]'
-        data-title="盘龙祥云柱"
-        data-intro="镇宅级盘龙祥云柱，柱身浮雕腾龙缠绕祥云，龙纹矫健有力，祥云飘逸灵动，寓意龙腾四海、事业兴旺，是庭院核心景观石雕。"
-        data-size="高180cm × 直径40cm (单根/一对)"
-        data-material="天然青石大料"
-        data-craft="深浮雕龙纹 + 手工精雕细节 + 仿古做旧包浆">
-        <img src="https://picsum.photos/id/182/600/400" alt="盘龙祥云柱" class="w-full h-56 object-cover">
-        <div class="p-5">
-          <h3 class="font-bold text-lg mb-2 text-stone-dark">盘龙祥云柱</h3>
-          <p class="text-stone-mid text-sm mb-3">青石浮雕龙纹 庭院镇宅石柱 大气磅礴</p>
-          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">祥云柱</span>
-        </div>
-      </div>
-
-      <!-- 麒麟 -->
-      <div class="stone-card" data-category="qilin"
-        data-imgs='["https://picsum.photos/id/183/1200/900","https://picsum.photos/id/257/1200/900"]'
-        data-title="招财送子麒麟"
-        data-intro="瑞兽麒麟成对摆件，麒麟脚踏祥云，昂首向前，寓意招财纳福、送子添喜、镇宅辟邪，是中式庭院入户的吉祥瑞兽石雕首选。"
-        data-size="高60cm × 长50cm × 宽30cm (一对)"
-        data-material="天然晚霞红石材"
-        data-craft="全立体圆雕 + 手工打磨纹理 + 哑光防护处理">
-        <img src="https://picsum.photos/id/183/600/400" alt="石雕麒麟" class="w-full h-56 object-cover">
-        <div class="p-5">
-          <h3 class="font-bold text-lg mb-2 text-stone-dark">招财送子麒麟</h3>
-          <p class="text-stone-mid text-sm mb-3">成对雕刻 瑞兽麒麟 镇宅纳福 庭院摆件</p>
-          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">麒麟</span>
-        </div>
-      </div>
-
-      <!-- 貔貅 -->
-      <div class="stone-card" data-category="pixiu"
-        data-imgs='["https://picsum.photos/id/184/1200/900","https://picsum.photos/id/259/1200/900"]'
-        data-title="聚财貔貅摆件"
-        data-intro="经典守财貔貅石雕，貔貅独角卷尾，口衔铜钱，寓意招财进宝、守财聚富，只进不出，适合庭院入户、玄关摆放，风水极佳。"
-        data-size="高50cm × 长60cm × 宽25cm (一对)"
-        data-material="天然青石"
-        data-craft="立体圆雕 + 手工精修细节 + 仿古做旧处理">
-        <img src="https://picsum.photos/id/184/600/400" alt="石雕貔貅" class="w-full h-56 object-cover">
-        <div class="p-5">
-          <h3 class="font-bold text-lg mb-2 text-stone-dark">聚财貔貅摆件</h3>
-          <p class="text-stone-mid text-sm mb-3">天然青石雕刻 守财瑞兽 庭院入户摆放</p>
-          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">貔貅</span>
-        </div>
-      </div>
-
-      <!-- 大象 -->
-      <div class="stone-card" data-category="daxiang"
-        data-imgs='["https://picsum.photos/id/185/1200/900","https://picsum.photos/id/261/1200/900","https://picsum.photos/id/263/1200/900"]'
-        data-title="吉祥如意石象"
-        data-intro="吸财纳福吉祥石象，大象卷鼻托如意，寓意吉祥如意、吸财聚福、阖家安康，成对摆放于庭院入户两侧，是经典风水石雕摆件。"
-        data-size="高70cm × 长80cm × 宽40cm (一对)"
-        data-material="一级汉白玉 / 青石 双材质可选"
-        data-craft="全立体圆雕 + 手工打磨光滑 + 防水防裂处理">
-        <img src="https://picsum.photos/id/185/600/400" alt="石雕大象" class="w-full h-56 object-cover">
-        <div class="p-5">
-          <h3 class="font-bold text-lg mb-2 text-stone-dark">吉祥如意石象</h3>
-          <p class="text-stone-mid text-sm mb-3">汉白玉大象 吸财纳福 成对摆放 庭院镇宅</p>
-          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">大象</span>
-        </div>
-      </div>
-
-      <!-- 狮子 -->
-      <div class="stone-card" data-category="shizi"
-        data-imgs='["https://picsum.photos/id/186/1200/900","https://picsum.photos/id/265/1200/900"]'
-        data-title="北京狮石雕一对"
-        data-intro="经典京派镇宅石狮，雄狮踩绣球威震八方，雌狮抚幼狮子孙绵延，雕刻威武大气，神态庄严，是大宅庭院入户镇守的顶级石雕摆件。"
-        data-size="高100cm/120cm/150cm 多规格 (一对)"
-        data-material="天然花岗岩芝麻白"
-        data-craft="全立体圆雕 + 手工精雕毛发纹理 + 哑光防护处理">
-        <img src="https://picsum.photos/id/186/600/400" alt="石雕狮子" class="w-full h-56 object-cover">
-        <div class="p-5">
-          <h3 class="font-bold text-lg mb-2 text-stone-dark">北京狮石雕一对</h3>
-          <p class="text-stone-mid text-sm mb-3">花岗岩精雕 镇宅石狮 庭院大宅入户摆件</p>
-          <span class="inline-block bg-stone-accent/10 text-stone-accent px-3 py-1 rounded-full text-xs">狮子</span>
-        </div>
-      </div>
     </section>
-  </main>
 
-  <!-- 页脚 -->
-  <footer class="bg-stone-dark text-white mt-16 py-8">
-    <div class="container mx-auto px-4 text-center">
-      <p class="mb-2">匠心石雕 · 专注庭院古建石雕定制</p>
-      <p class="text-stone-light text-sm">所有石雕支持尺寸定制 | 古法工艺 手工精雕 | 点击产品卡片查看完整详情+细节大图</p>
+    <!-- 特色美食 -->
+    <section id="food" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold mb-4">特色美食</h2>
+                <div class="w-20 h-1 bg-weixian-secondary mx-auto mb-6"></div>
+                <p class="text-gray-600 max-w-3xl mx-auto">威县美食文化源远流长，其中以威县火烧最为著名，是冀南地区的特色名吃。</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- 威县火烧 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                    <img src="./images/huoshao.jpeg" alt="威县火烧" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2 text-weixian-secondary">威县火烧</h3>
+                        <p class="text-gray-600 mb-4">威县火烧是邢台市非物质文化遗产，采用吊炉烤制，外酥里嫩，香酥可口，有肉馅、糖馅、菜馅等多种口味。</p>
+                        <div class="flex items-center text-amber-500">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <span class="ml-2 text-gray-600">必尝美食</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 威县葡萄 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                    <img src="./images/putao.jpg" alt="威县葡萄" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2 text-weixian-secondary">威县葡萄</h3>
+                        <p class="text-gray-600 mb-4">威县葡萄种植历史悠久，品种繁多，以巨峰、夏黑、阳光玫瑰等品种最为著名，果粒饱满，甜度高，口感佳。</p>
+                        <div class="flex items-center text-amber-500">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star-half-stroke"></i>
+                            <span class="ml-2 text-gray-600">地理标志产品</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 其他美食 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                    <img src="./images/xigua.jpg" alt="威县其他美食" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2 text-weixian-secondary">其他特色</h3>
+                        <p class="text-gray-600 mb-4">除火烧和葡萄外，威县还有吊炉烧饼、老豆腐、焖饼、八大碗等特色美食，各具风味，体现了冀南饮食文化的独特魅力。</p>
+                        <div class="flex items-center text-amber-500">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-regular fa-star"></i>
+                            <span class="ml-2 text-gray-600">地方风味</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 旅游景点 -->
+    <section id="scenic" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold mb-4">旅游景点</h2>
+                <div class="w-20 h-1 bg-weixian-primary mx-auto mb-6"></div>
+                <p class="text-gray-600 max-w-3xl mx-auto">威县拥有丰富的自然和人文景观，既有历史遗迹，也有现代农业观光园。</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- 景点1 -->
+                <div class="group relative overflow-hidden rounded-lg shadow-lg h-80" data-scenic='{"title":"义和团纪念馆","image":"./images/jinianguan.jpg","info":{"开放时间":"周二至周日 9:00-17:00","门票价格":"免费","地址":"河北省威县县城","联系电话":"0319-6162345"},"description":"义和团纪念馆是全国唯一的义和团运动纪念馆，建于1998年，占地面积1.5万平方米。纪念馆通过大量的历史照片、文物、雕塑和多媒体展示，全面记录了义和团运动的光辉历史和威县人民在这场运动中的英勇表现。\n\n纪念馆主体建筑为仿古风格，庄严肃穆，展厅分为多个部分，详细介绍了义和团运动的起源、发展、高潮和历史意义。馆内收藏有大量珍贵的历史文物，包括义和团使用的武器、旗帜、文书等，是研究义和团运动的重要实物资料。\n\n作为全国爱国主义教育示范基地，义和团纪念馆每年吸引大量国内外游客前来参观学习，成为威县重要的文化旅游景点。"}'>
+                    <img src="./images/jinianguan.jpg" alt="义和团纪念馆" class="w-full h-full object-cover transition-transform group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
+                        <h3 class="font-bold text-xl text-white mb-2">义和团纪念馆</h3>
+                        <p class="text-white/90 text-sm mb-3">全国唯一的义和团运动纪念馆，记录了义和团运动的光辉历史。</p>
+                        <a href="#" class="text-white hover:text-weixian-primary transition-colors text-sm scenic-detail-btn">
+                            了解详情 <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 景点2 -->
+                <div class="group relative overflow-hidden rounded-lg shadow-lg h-80" data-scenic='{"title":"孙家寨孝道村","image":"./images/sunjiazhai.jpeg","info":{"开放时间":"全天开放","门票价格":"免费","地址":"河北省威县孙家寨村","特色":"孝道文化、美丽乡村"},"description":"孙家寨孝道村是全国文明村，位于威县县城东南部，以孝道文化为特色，是威县美丽乡村建设的典范。\n\n近年来，孙家寨村大力弘扬孝道文化，通过建设孝道广场、孝道文化墙、孝道讲堂等设施，开展丰富多彩的孝道活动，营造了浓厚的孝道文化氛围。村里定期举办\"好媳妇\"、\"好婆婆\"、\"孝道之星\"等评选活动，激发了村民践行孝道的积极性。\n\n同时，孙家寨村注重生态环境保护和乡村旅游发展，建设了高标准的村民住宅、文化广场、健身设施等，打造了宜居宜游的美丽乡村。村内绿树成荫，环境优美，成为威县乡村旅游的新亮点。\n\n孙家寨孝道村的发展模式得到了上级领导和社会各界的高度认可，先后获得\"全国文明村\"、\"全国美丽乡村示范村\"等荣誉称号。"}'>
+                    <img src="./images/sunjiazhai.jpeg" alt="孙家寨孝道村" class="w-full h-full object-cover transition-transform group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
+                        <h3 class="font-bold text-xl text-white mb-2">孙家寨孝道村</h3>
+                        <p class="text-white/90 text-sm mb-3">全国文明村，以孝道文化为特色，传承中华传统美德，建设和谐美丽乡村。</p>
+                        <a href="#" class="text-white hover:text-weixian-primary transition-colors text-sm scenic-detail-btn">
+                            了解详情 <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 景点详情模态框 -->
+    <div id="scenicModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80" id="modalOverlay"></div>
+        <div class="relative bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <button id="closeModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl">
+                <i class="fa-solid fa-times"></i>
+            </button>
+            <div class="p-6 md:p-8">
+                <h3 id="modalTitle" class="text-2xl md:text-3xl font-bold mb-4 text-weixian-primary"></h3>
+                <div class="grid md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <img id="modalImage" src="" alt="景点图片" class="w-full h-64 object-cover rounded-lg">
+                    </div>
+                    <div>
+                        <div id="modalInfo" class="space-y-4"></div>
+                    </div>
+                </div>
+                <div id="modalDescription" class="text-gray-600 leading-relaxed mb-6"></div>
+                <div class="flex justify-end">
+                    <button id="closeModalBtn" class="bg-weixian-primary hover:bg-weixian-primary/90 text-white font-medium py-2 px-6 rounded-full transition-colors">
+                        关闭
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-  </footer>
 
-  <!-- 图片详情弹窗遮罩层 (带完整简介+尺寸+材质+工艺) -->
-  <div id="detailModal" class="fixed inset-0 bg-black/85 z-[999] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 p-4">
-    <button id="closeModal" class="modal-btn absolute top-5 right-5">
-      <i class="fa fa-times text-xl"></i>
-    </button>
-    <button id="prevImg" class="modal-btn absolute left-5 md:left-8">
-      <i class="fa fa-chevron-left text-xl"></i>
-    </button>
-    <button id="nextImg" class="modal-btn absolute right-5 md:right-8">
-      <i class="fa fa-chevron-right text-xl"></i>
-    </button>
-
-    <!-- 弹窗核心内容：响应式 左图右文/上图下文 -->
-    <div class="w-full max-w-6xl max-h-[90vh] flex flex-col lg:flex-row gap-6 items-center bg-black/30 backdrop-blur-sm rounded-xl p-6 overflow-auto">
-      <!-- 左侧：高清轮播图片区 -->
-      <div class="flex-1 min-w-0">
-        <h2 id="modalTitle" class="text-white text-2xl font-bold text-center mb-4"></h2>
-        <img id="currentImg" src="" alt="石雕细节大图" class="detail-img w-full h-auto max-h-[60vh] object-contain rounded-lg">
-        <div class="flex justify-center gap-2 mt-4">
-          <span id="imgIndicator" class="text-white bg-white/20 px-3 py-1 rounded-full text-sm">1/1</span>
+    <!-- 文化详情模态框 -->
+    <div id="cultureModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80" id="cultureModalOverlay"></div>
+        <div class="relative bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <button id="closeCultureModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl">
+                <i class="fa-solid fa-times"></i>
+            </button>
+            <div class="p-6 md:p-8">
+                <div class="flex items-center justify-center mb-6">
+                    <div class="w-16 h-16 bg-weixian-primary/10 rounded-full flex items-center justify-center">
+                        <i id="cultureModalIcon" class="fa-solid text-weixian-primary text-2xl"></i>
+                    </div>
+                </div>
+                <h3 id="cultureModalTitle" class="text-2xl md:text-3xl font-bold mb-6 text-center text-weixian-primary"></h3>
+                <div id="cultureModalDescription" class="text-gray-600 leading-relaxed mb-6"></div>
+                <div class="flex justify-end">
+                    <button id="closeCultureModalBtn" class="bg-weixian-primary hover:bg-weixian-primary/90 text-white font-medium py-2 px-6 rounded-full transition-colors">
+                        关闭
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
-
-      <!-- 右侧：石雕完整信息区 -->
-      <div class="flex-1 min-w-0 bg-white/5 rounded-lg p-5 border border-white/10">
-        <div class="mb-4">
-          <p id="modalIntro" class="text-white/95 leading-relaxed text-lg"></p>
-        </div>
-        <div class="space-y-1">
-          <div class="stone-info-item">
-            <i class="fa fa-ruler-combined text-stone-accent"></i>
-            <div><span class="text-white font-medium mr-2">产品尺寸：</span><span id="modalSize"></span></div>
-          </div>
-          <div class="stone-info-item">
-            <i class="fa fa-cube text-stone-accent"></i>
-            <div><span class="text-white font-medium mr-2">雕刻材质：</span><span id="modalMaterial"></span></div>
-          </div>
-          <div class="stone-info-item">
-            <i class="fa fa-hand-scissors-o text-stone-accent"></i>
-            <div><span class="text-white font-medium mr-2">工艺特点：</span><span id="modalCraft"></span></div>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
 
-  <script>
-    // ========== 原有筛选功能 完整保留 ==========
-    const categoryBtns = document.querySelectorAll('.category-btn');
-    const stoneCards = document.querySelectorAll('.stone-card');
+    <!-- 文化底蕴 -->
+    <section id="culture" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold mb-4">文化底蕴</h2>
+                <div class="w-20 h-1 bg-weixian-secondary mx-auto mb-6"></div>
+                <p class="text-gray-600 max-w-3xl mx-auto">威县历史悠久，文化底蕴深厚，拥有独特的地域文化和民俗风情。</p>
+            </div>
 
-    categoryBtns.forEach(btn => {
-      btn.addEventListener('click', function() {
-        categoryBtns.forEach(b => b.classList.remove('category-btn-active'));
-        this.classList.add('category-btn-active');
-        const selectedCategory = this.getAttribute('data-category');
-        filterStones(selectedCategory);
-      });
-    });
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- 文化1 -->
+                <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow cursor-pointer culture-card" data-culture='{"title":"历史沿革","icon":"landmark-dome","description":"威县历史悠久，文化底蕴深厚，拥有独特的地域文化和民俗风情。\n\n威县古称洺州，历史上曾为州、府治所，距今已有2000多年历史。早在新石器时代，就有人类在此繁衍生息。春秋时期，威县属晋国，战国时期属赵国。秦朝统一后，实行郡县制，威县属巨鹿郡。\n\n西汉时期，威县境内置广宗县，属巨鹿郡。东汉时期，广宗县属安平国。三国时期，威县属魏国冀州安平郡。西晋时期，广宗县属冀州安平国。南北朝时期，威县先后属北魏、东魏、北齐、北周。\n\n隋朝时期，威县属冀州信都郡。唐朝时期，威县属河北道魏州。五代时期，威县先后属后梁、后唐、后晋、后汉、后周。宋朝时期，威县属河北东路大名府。金朝时期，威县属河北西路洺州。\n\n元朝时期，威县属中书省广平路洺州。明朝时期，威县属京师广平府。清朝时期，威县属直隶省广平府。\n\n近代以来，威县是义和团运动的发源地之一，1900年，义和团首领赵三多在威县发起了反洋教斗争，揭开了义和团运动的序幕。抗日战争时期，威县是冀南抗日根据地的重要组成部分，威县人民为抗击日本侵略者做出了巨大贡献。\n\n1949年新中国成立后，威县属河北省邢台专区。1958年，威县与南宫县合并为南宫县。1961年，恢复威县建制。1993年，邢台地区与邢台市合并，威县属邢台市管辖至今。\n\n威县历史悠久，文化遗产丰富，境内有多处历史文物古迹，如义和团纪念馆、定陵寺遗址等，是研究中国历史和文化的重要实物资料。"}'>
+                    <div class="w-16 h-16 bg-weixian-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="fa-solid fa-landmark-dome text-weixian-primary text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-4 text-center">历史沿革</h3>
+                    <p class="text-gray-600 text-center">威县古称洺州，历史上曾为州、府治所，距今已有2000多年历史。义和团运动在此发源，留下了宝贵的历史文化遗产。</p>
+                    <div class="mt-4 text-center">
+                        <span class="text-weixian-primary hover:text-weixian-primary/80 text-sm font-medium flex items-center justify-center gap-1">
+                            了解详情 <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </span>
+                    </div>
+                </div>
 
-    function filterStones(category) {
-      stoneCards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(10px)';
-        card.style.pointerEvents = 'none';
+                <!-- 文化2 -->
+                <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow cursor-pointer culture-card" data-culture='{"title":"民俗文化","icon":"masks-theater","description":"威县民俗文化丰富多彩，具有独特的地域特色，是中华文化的重要组成部分。\n\n威县乱弹是国家级非物质文化遗产，也是威县最具代表性的传统戏曲剧种。威县乱弹起源于明末清初，距今已有300多年历史，它融合了昆曲、高腔、梆子等多种戏曲元素，形成了独特的艺术风格。威县乱弹的唱腔高亢激昂，表演粗犷豪放，行当齐全，剧目丰富，是河北地方戏曲的重要代表之一。\n\n除了威县乱弹，威县还有许多其他传统民间艺术形式，如秧歌、鼓乐、舞狮、舞龙等。威县秧歌历史悠久，表演形式多样，有地秧歌、高跷秧歌等多种类型，是威县人民喜爱的民间舞蹈。威县鼓乐以其节奏明快、气势磅礴而闻名，常用于节日庆典和民间活动。\n\n威县的传统手工艺也非常发达，如威县剪纸、威县刺绣、威县木雕等。威县剪纸历史悠久，技艺精湛，题材广泛，包括人物、花卉、鸟兽等多种图案，是威县民间艺术的重要组成部分。威县刺绣工艺精细，色彩鲜艳，图案精美，具有很高的艺术价值。\n\n威县的传统节日和民俗活动也非常丰富，如春节、元宵节、清明节、端午节、中秋节等。春节期间，威县人民有贴春联、挂灯笼、放鞭炮、吃饺子等传统习俗。元宵节期间，威县有闹花灯、猜灯谜、耍龙灯等活动。清明节期间，威县人民有扫墓、踏青等习俗。端午节期间，威县有吃粽子、赛龙舟等习俗。中秋节期间，威县有赏月、吃月饼等习俗。\n\n威县的饮食文化也非常独特，以威县火烧、威县老豆腐、威县焖饼等为代表的传统美食，深受当地人民和游客的喜爱。\n\n威县民俗文化是威县人民在长期的生产生活中创造和传承下来的宝贵财富，它不仅丰富了威县人民的精神文化生活，也为中华文化的多样性做出了重要贡献。"}'>
+                    <div class="w-16 h-16 bg-weixian-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="fa-solid fa-masks-theater text-weixian-primary text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-4 text-center">民俗文化</h3>
+                    <p class="text-gray-600 text-center">威县乱弹是国家级非物质文化遗产，唱腔独特，表演形式丰富，是河北地方戏曲的重要代表之一。此外还有秧歌、鼓乐等民间艺术。</p>
+                    <div class="mt-4 text-center">
+                        <span class="text-weixian-primary hover:text-weixian-primary/80 text-sm font-medium flex items-center justify-center gap-1">
+                            了解详情 <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </span>
+                    </div>
+                </div>
 
-        setTimeout(() => {
-          const cardCategory = card.getAttribute('data-category');
-          if (category === 'all' || cardCategory === category) {
-            card.style.display = 'block';
-            setTimeout(() => {
-              card.style.opacity = '1';
-              card.style.transform = 'translateY(0)';
-              card.style.pointerEvents = 'auto';
-            }, index * 50);
-          } else {
-            card.style.display = 'none';
-          }
-        }, 200);
-      });
-    }
+                <!-- 文化3 -->
+                <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow cursor-pointer culture-card" data-culture='{"title":"名人荟萃","icon":"award","description":"威县人杰地灵，历史上涌现出众多杰出人物，他们在政治、军事、文化、科技等各个领域都做出了重要贡献。\n\n赵三多（1841-1902），威县沙柳寨人，义和团运动的主要发起人之一，1900年在威县发起了反洋教斗争，揭开了义和团运动的序幕。赵三多出生于一个贫苦农民家庭，自幼习武，练就了一身好武艺。他为人正直，嫉恶如仇，深受当地群众的爱戴。\n\n19世纪末，随着西方列强的入侵和基督教的传播，中国社会矛盾日益尖锐。1898年，赵三多在威县组织了义和拳，提出了扶清灭洋的口号，号召广大农民起来反抗外国侵略者。1900年，赵三多在威县发起了反洋教斗争，揭开了义和团运动的序幕。随后，义和团运动迅速蔓延到全国各地，成为中国近代史上一次重要的反帝爱国运动。\n\n1902年，赵三多在与清军的战斗中不幸被捕，最终英勇牺牲，年仅61岁。赵三多虽然牺牲了，但他的精神却激励着一代又一代的中国人为了国家的独立和民族的尊严而奋斗。\n\n除了赵三多，威县还涌现出许多其他杰出人物：\n- 张霖之（1908-1967），威县南胡帐村人，中国共产党优秀党员，久经考验的忠诚的共产主义战士，无产阶级革命家，曾任煤炭工业部部长、中共中央华北局第三书记等职务。\n- 范子侠（1908-1942），威县范家营村人，抗日民族英雄，曾任八路军129师新编10旅旅长、太行军区第六军分区司令员等职务，1942年在反扫荡战斗中壮烈牺牲。\n- 刘杰（1915-2018），威县人，中国共产党优秀党员，久经考验的忠诚的共产主义战士，无产阶级革命家，曾任河南省委第一书记、煤炭工业部部长、地质部部长等职务。\n- 任仲夷（1914-2005），威县西小庄人，中国共产党优秀党员，久经考验的忠诚的共产主义战士，无产阶级革命家，曾任辽宁省委第一书记、广东省委第一书记等职务，是中国改革开放的重要推动者之一。\n- 马国瑞（1915-2005），威县人，中国共产党优秀党员，久经考验的忠诚的共产主义战士，无产阶级革命家，曾任中共中央纪律检查委员会副书记等职务。\n- 赵忠祥（1942-2020），威县人，著名播音主持人，中央电视台《新闻联播》首任男主播，曾主持《人与自然》《动物世界》等节目，是中国电视播音事业的奠基者之一。\n- 刘大为（1945-），威县人，著名国画家，中国美术家协会主席，擅长人物画，作品多次在国内外展出并获奖。\n- 王梦恕（1938-2018），威县人，著名隧道及地下工程专家，中国工程院院士，曾任铁道部隧道工程局副总工程师、总工程师等职务，为中国隧道工程事业做出了巨大贡献。\n\n这些名人是威县的骄傲，他们的事迹和精神激励着一代又一代威县人民奋发图强，为家乡的发展和祖国的繁荣做出自己的贡献。"}'>
+                    <div class="w-16 h-16 bg-weixian-primary/10 rounded-full flex items-center justify-center mb-6 mx-auto">
+                        <i class="fa-solid fa-award text-weixian-primary text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-4 text-center">名人荟萃</h3>
+                    <p class="text-gray-600 text-center">威县人杰地灵，历史上涌现出众多名人，包括清代名臣、近代革命志士等，为中国历史发展做出了重要贡献。</p>
+                    <div class="mt-4 text-center">
+                        <span class="text-weixian-primary hover:text-weixian-primary/80 text-sm font-medium flex items-center justify-center gap-1">
+                            了解详情 <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    window.addEventListener('DOMContentLoaded', () => {
-      stoneCards.forEach((card, index) => {
-        setTimeout(() => {
-          card.style.opacity = '1';
-          card.style.transform = 'translateY(0)';
-        }, index * 50);
-      });
-    });
+    <!-- 联系我们 -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold mb-4">联系我们</h2>
+                <div class="w-20 h-1 bg-weixian-primary mx-auto mb-6"></div>
+                <p class="text-gray-600 max-w-3xl mx-auto">如果您想了解更多关于威县的信息，欢迎联系我们！</p>
+            </div>
 
-    // ========== 核心：弹窗展示【简介+尺寸+材质+工艺+多图轮播】+ 修复按钮点击 ==========
-    const detailModal = document.getElementById('detailModal');
-    const closeModal = document.getElementById('closeModal');
-    const prevImg = document.getElementById('prevImg');
-    const nextImg = document.getElementById('nextImg');
-    const currentImg = document.getElementById('currentImg');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalIntro = document.getElementById('modalIntro');
-    const modalSize = document.getElementById('modalSize');
-    const modalMaterial = document.getElementById('modalMaterial');
-    const modalCraft = document.getElementById('modalCraft');
-    const imgIndicator = document.getElementById('imgIndicator');
-    
-    let imgList = [];
-    let currentIndex = 0;
+            <div class="grid md:grid-cols-2 gap-12">
+                <div>
+                    <div class="bg-gray-50 p-8 rounded-lg shadow-lg h-full">
+                        <h3 class="font-bold text-xl mb-6">联系方式</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-weixian-primary/10 rounded-full flex items-center justify-center">
+                                    <i class="fa-solid fa-map-marker-alt text-weixian-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">地址</h4>
+                                    <p class="text-gray-600">河北省邢台市威县洺州镇东街</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-weixian-primary/10 rounded-full flex items-center justify-center">
+                                    <i class="fa-solid fa-phone text-weixian-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">电话</h4>
+                                    <p class="text-gray-600">0319-6166666</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-weixian-primary/10 rounded-full flex items-center justify-center">
+                                    <i class="fa-solid fa-envelope text-weixian-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">邮箱</h4>
+                                    <p class="text-gray-600">info@weixian.gov.cn</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-weixian-primary/10 rounded-full flex items-center justify-center">
+                                    <i class="fa-solid fa-clock text-weixian-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-medium">工作时间</h4>
+                                    <p class="text-gray-600">周一至周五 8:30-17:30</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-8">
+                            <h4 class="font-medium mb-4">关注我们</h4>
+                            <div class="flex gap-4">
+                                <a href="#" class="w-10 h-10 bg-weixian-primary rounded-full flex items-center justify-center text-white hover:bg-weixian-primary/90 transition-colors">
+                                    <i class="fa-brands fa-weixin"></i>
+                                </a>
+                                <a href="#" class="w-10 h-10 bg-weixian-primary rounded-full flex items-center justify-center text-white hover:bg-weixian-primary/90 transition-colors">
+                                    <i class="fa-brands fa-weibo"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="bg-gray-50 p-8 rounded-lg shadow-lg">
+                        <h3 class="font-bold text-xl mb-6">留言咨询</h3>
+                        <form>
+                            <div class="mb-4">
+                                <label for="name" class="block text-gray-700 mb-2">姓名</label>
+                                <input type="text" id="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-weixian-primary focus:border-transparent" placeholder="请输入您的姓名">
+                            </div>
+                            <div class="mb-4">
+                                <label for="phone" class="block text-gray-700 mb-2">电话</label>
+                                <input type="tel" id="phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-weixian-primary focus:border-transparent" placeholder="请输入您的联系电话">
+                            </div>
+                            <div class="mb-4">
+                                <label for="email" class="block text-gray-700 mb-2">邮箱</label>
+                                <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-weixian-primary focus:border-transparent" placeholder="请输入您的邮箱地址">
+                            </div>
+                            <div class="mb-6">
+                                <label for="message" class="block text-gray-700 mb-2">留言内容</label>
+                                <textarea id="message" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-weixian-primary focus:border-transparent" placeholder="请输入您想咨询的内容"></textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-weixian-primary hover:bg-weixian-primary/90 text-white font-medium py-3 px-6 rounded-lg transition-colors">
+                                提交留言
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    // 为每个卡片绑定点击事件 - 加载完整信息
-    stoneCards.forEach(card => {
-      card.addEventListener('click', () => {
-        imgList = JSON.parse(card.getAttribute('data-imgs'));
-        modalTitle.textContent = card.getAttribute('data-title');
-        modalIntro.textContent = card.getAttribute('data-intro');
-        modalSize.textContent = card.getAttribute('data-size');
-        modalMaterial.textContent = card.getAttribute('data-material');
-        modalCraft.textContent = card.getAttribute('data-craft');
-        currentIndex = 0;
+    <!-- 页脚 -->
+    <footer class="bg-weixian-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="font-bold text-xl mb-4">魅力威县</h3>
+                    <p class="text-gray-400 mb-4">冀南明珠，千年古县，欢迎您来威县做客！</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa-brands fa-weixin"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa-brands fa-weibo"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa-brands fa抖音"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-xl mb-4">快速链接</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#overview" class="text-gray-400 hover:text-white transition-colors">威县概况</a></li>
+                        <li><a href="#food" class="text-gray-400 hover:text-white transition-colors">特色美食</a></li>
+                        <li><a href="#scenic" class="text-gray-400 hover:text-white transition-colors">旅游景点</a></li>
+                        <li><a href="#culture" class="text-gray-400 hover:text-white transition-colors">文化底蕴</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-xl mb-4">旅游服务</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">旅游攻略</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">酒店预订</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">特产购买</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">交通指南</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold text-xl mb-4">联系我们</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center gap-2 text-gray-400">
+                            <i class="fa-solid fa-map-marker-alt"></i>
+                            <span>河北省邢台市威县</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-gray-400">
+                            <i class="fa-solid fa-phone"></i>
+                            <span>0319-6166666</span>
+                        </li>
+                        <li class="flex items-center gap-2 text-gray-400">
+                            <i class="fa-solid fa-envelope"></i>
+                            <span>info@weixian.gov.cn</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 text-center text-gray-400">
+                <p>© 2025 威县文化和旅游局 版权所有 | 冀ICP备XXXXXXXX号</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button id="backToTop" class="fixed bottom-8 right-8 bg-weixian-primary text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg opacity-0 invisible transition-all z-50">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        const backToTop = document.getElementById('backToTop');
         
-        currentImg.src = imgList[currentIndex];
-        imgIndicator.textContent = `${currentIndex+1}/${imgList.length}`;
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 100) {
+                navbar.classList.add('py-2', 'shadow-md');
+                navbar.classList.remove('py-3');
+                backToTop.classList.remove('opacity-0', 'invisible');
+                backToTop.classList.add('opacity-100', 'visible');
+            } else {
+                navbar.classList.add('py-3');
+                navbar.classList.remove('py-2', 'shadow-md');
+                backToTop.classList.add('opacity-0', 'invisible');
+                backToTop.classList.remove('opacity-100', 'visible');
+            }
+        });
+
+        // 移动端菜单切换
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
         
-        detailModal.classList.remove('hidden');
-        setTimeout(() => {
-          detailModal.style.opacity = '1';
-        }, 10);
-        document.body.style.overflow = 'hidden';
-      });
-    });
+        menuBtn.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+            const icon = menuBtn.querySelector('i');
+            if (icon.classList.contains('fa-bars')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
 
-    // 关闭弹窗
-    function hideModal() {
-      detailModal.style.opacity = '0';
-      setTimeout(() => {
-        detailModal.classList.add('hidden');
-        document.body.style.overflow = 'auto';
-      }, 300);
-    }
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // 关闭移动端菜单
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                        const icon = menuBtn.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                }
+            });
+        });
 
-    // 切换图片 保留淡入淡出动画
-    function changeImg(direction) {
-      currentIndex += direction;
-      if (currentIndex < 0) currentIndex = imgList.length - 1;
-      if (currentIndex >= imgList.length) currentIndex = 0;
-      currentImg.style.opacity = '0';
-      setTimeout(() => {
-        currentImg.src = imgList[currentIndex];
-        currentImg.style.opacity = '1';
-        imgIndicator.textContent = `${currentIndex+1}/${imgList.length}`;
-      }, 200);
-    }
+        // 返回顶部
+        backToTop.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
 
-    // ✅ 修复关键：按钮绑定事件 + 阻止冒泡防止穿透
-    closeModal.addEventListener('click', (e)=>{e.stopPropagation();hideModal();});
-    prevImg.addEventListener('click', (e)=>{e.stopPropagation();changeImg(-1);});
-    nextImg.addEventListener('click', (e)=>{e.stopPropagation();changeImg(1);});
-    detailModal.addEventListener('click', (e) => { if (e.target === detailModal) hideModal(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !detailModal.classList.contains('hidden')) hideModal(); });
-  </script>
+        // 景点详情模态框功能
+        const scenicModal = document.getElementById('scenicModal');
+        const closeModal = document.getElementById('closeModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalImage = document.getElementById('modalImage');
+        const modalInfo = document.getElementById('modalInfo');
+        const modalDescription = document.getElementById('modalDescription');
+        const scenicDetailBtns = document.querySelectorAll('.scenic-detail-btn');
+        
+        // 打开模态框
+        scenicDetailBtns.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const scenicCard = this.closest('[data-scenic]');
+                const scenicData = JSON.parse(scenicCard.getAttribute('data-scenic'));
+                
+                // 填充模态框数据
+                modalTitle.textContent = scenicData.title;
+                modalImage.src = scenicData.image;
+                modalImage.alt = scenicData.title;
+                
+                // 填充信息
+                modalInfo.innerHTML = '';
+                for (const [key, value] of Object.entries(scenicData.info)) {
+                    const infoItem = document.createElement('div');
+                    infoItem.className = 'flex items-start';
+                    infoItem.innerHTML = `
+                        <span class="font-medium text-weixian-dark mr-2 min-w-24">${key}：</span>
+                        <span class="text-gray-600">${value}</span>
+                    `;
+                    modalInfo.appendChild(infoItem);
+                }
+                
+                // 填充描述
+                modalDescription.textContent = scenicData.description;
+                
+                // 显示模态框
+                scenicModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        // 关闭模态框
+        function closeModalFunc() {
+            scenicModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+        
+        if (closeModal) closeModal.addEventListener('click', closeModalFunc);
+        if (closeModalBtn) closeModalBtn.addEventListener('click', closeModalFunc);
+        if (modalOverlay) modalOverlay.addEventListener('click', closeModalFunc);
+
+        // 文化底蕴详情模态框功能
+        const cultureModal = document.getElementById('cultureModal');
+        const closeCultureModal = document.getElementById('closeCultureModal');
+        const closeCultureModalBtn = document.getElementById('closeCultureModalBtn');
+        const cultureModalOverlay = document.getElementById('cultureModalOverlay');
+        const cultureModalTitle = document.getElementById('cultureModalTitle');
+        const cultureModalIcon = document.getElementById('cultureModalIcon');
+        const cultureModalDescription = document.getElementById('cultureModalDescription');
+        const cultureCards = document.querySelectorAll('.culture-card');
+        
+        // 打开文化底蕴模态框
+        cultureCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const cultureData = JSON.parse(this.getAttribute('data-culture'));
+                
+                // 填充模态框数据
+                cultureModalTitle.textContent = cultureData.title;
+                cultureModalIcon.className = `fa-solid fa-${cultureData.icon} text-weixian-primary text-2xl`;
+                cultureModalDescription.textContent = cultureData.description;
+                
+                // 显示模态框
+                cultureModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        // 关闭文化底蕴模态框
+        function closeCultureModalFunc() {
+            cultureModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+        
+        if (closeCultureModal) closeCultureModal.addEventListener('click', closeCultureModalFunc);
+        if (closeCultureModalBtn) closeCultureModalBtn.addEventListener('click', closeCultureModalFunc);
+        if (cultureModalOverlay) cultureModalOverlay.addEventListener('click', closeCultureModalFunc);
+    </script>
 </body>
 </html>
